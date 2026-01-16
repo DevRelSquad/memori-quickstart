@@ -34,6 +34,7 @@ def make_client(provider="openai", model_override=None):
     if provider == "gemini":
         api_key = require_api_key("GOOGLE_API_KEY")
         model = model_override or os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
+        # FIXED: Use genai.Client() for Memori compatibility
         client = genai.Client(api_key=api_key)
         client._memori_model = model
         return client
@@ -102,7 +103,10 @@ def chat():
             
             # Create chat completion with memory
             if provider == "gemini":
-                response = client.models.generate_content(model=model, contents=user_message)
+                response = client.models.generate_content(
+                    model=model,
+                    contents=user_message
+                )
                 ai_response = response.text
             else:
                 response = client.chat.completions.create(
@@ -119,8 +123,13 @@ def chat():
             
             # Create chat completion without memory
             if provider == "gemini":
-                response = client.models.generate_content(model=model, contents=user_message)
+                response = client.models.generate_content(
+                    model=model,
+                    contents=user_message
+                )
+            
                 ai_response = response.text
+
             else:
                 response = client.chat.completions.create(
                     model=model,

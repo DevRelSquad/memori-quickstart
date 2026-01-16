@@ -5,7 +5,11 @@ from typing import Any, Dict, List
 from google import genai
 from memori import Memori
 from openai import OpenAI
+from dotenv import load_dotenv
 
+
+# Load environment variables from .env file
+load_dotenv()
 
 def get_sqlite_connection():
     """Return a connection to the local SQLite database."""
@@ -24,7 +28,7 @@ def make_client():
     provider = os.getenv("MEMORI_PROVIDER", "gemini").lower()
     if provider == "gemini":
         api_key = require_api_key("GOOGLE_API_KEY")
-        model = os.getenv("GEMINI_MODEL", "gemini-2.0-flash")
+        model = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
         client = genai.Client(api_key=api_key)
         # Track chosen model for reuse in demo flows.
         client._memori_model = model
@@ -48,7 +52,7 @@ def run_quickstart():
     # Store a fact.
     response = (
         client.models.generate_content(
-            model=getattr(client, "_memori_model", None) or os.getenv("GEMINI_MODEL", "gemini-2.0-flash"),
+            model=getattr(client, "_memori_model", None) or os.getenv("GEMINI_MODEL", "gemini-2.5-flash"),
             contents=[{"role": "user", "parts": [{"text": "My favorite color is blue."}]}],
         )
         if hasattr(client, "models")
@@ -70,7 +74,7 @@ def run_quickstart():
     # Recall the stored fact.
     response = (
         client.models.generate_content(
-            model=getattr(client, "_memori_model", None) or os.getenv("GEMINI_MODEL", "gemini-2.0-flash"),
+            model=getattr(client, "_memori_model", None) or os.getenv("GEMINI_MODEL", "gemini-2.5-flash"),
             contents=[{"role": "user", "parts": [{"text": "What's my favorite color?"}]}],
         )
         if hasattr(client, "models")

@@ -109,6 +109,29 @@ AI: "Your name is Sarah!"</code></pre>
 
                 <section class="theory-section">
                     <h3>⚡ How It Works Under the Hood</h3>
+                    <div class="code-block">
+                        <pre><code>[User Input] 
+     |
+     v
+[App Logic] --> [Memori Client Wrapper]
+                       |
+           (1. Search) v
+               [SQLite DB (memori.db)]
+                       |
+           (2. Inject Context)
+                       v
+                 [OpenAI / Gemini API]
+                       |
+           (3. Return Answer)
+                       v
+[App Logic] <--- [Memori Client Wrapper]
+     |                 |
+     |     (4. Extract & Store Fact Async)
+     |                 v
+     |         [SQLite DB (memori.db)]
+     v
+[User Output]</code></pre>
+                    </div>
                     <ol>
                         <li><strong>LLM Call:</strong> Your message is sent to the AI model (OpenAI or Gemini)</li>
                         <li><strong>Response:</strong> The AI generates a natural response</li>
